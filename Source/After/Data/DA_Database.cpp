@@ -8,5 +8,5 @@
 
 FEntityInfo UDA_Database::GetEntityData(const FGameplayTag Tag) const
 {
-	return EntityData[Tag];
+	return EntityData.Contains(Tag) ? EntityData[Tag] : FEntityInfo();
 }

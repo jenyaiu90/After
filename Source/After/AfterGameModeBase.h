@@ -20,9 +20,9 @@ class AFTER_API AAfterGameModeBase : public AGameModeBase
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Database")
-	UDA_Database* Database;
+	UDA_Database* Database; // The data asset with data about all gameplay objects
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Database")
-	UDA_Database* GetDatabase() const;
+	UDA_Database* GetDatabase() const; // Returns the database
 };

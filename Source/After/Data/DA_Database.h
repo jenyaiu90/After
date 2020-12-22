@@ -21,10 +21,12 @@ class AFTER_API UDA_Database : public UDataAsset
 	GENERATED_BODY()
 	
 protected:
+			/* ENTITY */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Entity")
 	TMap<FGameplayTag, FEntityInfo> EntityData;
 
 public:
+			/* ENTITY */
 	UFUNCTION(BlueprintCallable)
 	FEntityInfo GetEntityData(const FGameplayTag Tag) const;
 };

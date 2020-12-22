@@ -1,4 +1,8 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+    ////////////////////////////////////////
+   //        After by SnegirSoft         //
+  // Lisence: GNU GPL v2.0              //
+ //  File: After.h                     //
+////////////////////////////////////////
 
 #pragma once
 
