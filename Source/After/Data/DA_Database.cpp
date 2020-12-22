@@ -1,12 +1,12 @@
     ////////////////////////////////////////
    //        After by SnegirSoft         //
   // Lisence: GNU GPL v2.0              //
- //  File: DA_Database.h               //
+ //  File: DA_Database.cpp             //
 ////////////////////////////////////////
 
-#include "AfterGameModeBase.h"
+#include "DA_Database.h"
 
-UDA_Database* AAfterGameModeBase::GetDatabase() const
+FEntityInfo UDA_Database::GetEntityData(const FGameplayTag Tag) const
 {
-	return Database;
+	return EntityData[Tag];
 }
