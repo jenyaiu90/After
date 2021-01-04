@@ -1,6 +1,6 @@
     ////////////////////////////////////////
    //        After by SnegirSoft         //
-  // Lisence: GNU GPL v2.0              //
+  // License: GNU GPL v2.0              //
  //  File: DA_Database.cpp             //
 ////////////////////////////////////////
 
@@ -9,4 +9,9 @@
 FEntityInfo UDA_Database::GetEntityData(const FGameplayTag Tag) const
 {
 	return EntityData.Contains(Tag) ? EntityData[Tag] : FEntityInfo();
+}
+
+TMap<FDirection, UPaperFlipbook*> UDA_Database::GetEntityDebugFlipbooks() const
+{
+	return EntityDebugFlipbooks;
 }

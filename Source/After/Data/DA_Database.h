@@ -1,6 +1,6 @@
     ////////////////////////////////////////
    //        After by SnegirSoft         //
-  // Lisence: GNU GPL v2.0              //
+  // License: GNU GPL v2.0              //
  //  File: DA_Database.h               //
 ////////////////////////////////////////
 
@@ -25,8 +25,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Entity")
 	TMap<FGameplayTag, FEntityInfo> EntityData;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Entity")
+	TMap<FDirection, UPaperFlipbook*> EntityDebugFlipbooks;
+
 public:
 			/* ENTITY */
 	UFUNCTION(BlueprintCallable)
 	FEntityInfo GetEntityData(const FGameplayTag Tag) const;
+
+	UFUNCTION(BlueprintCallable)
+	TMap<FDirection, UPaperFlipbook*> GetEntityDebugFlipbooks() const;
 };

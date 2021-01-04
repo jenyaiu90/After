@@ -1,6 +1,6 @@
     ////////////////////////////////////////
    //        After by SnegirSoft         //
-  // Lisence: GNU GPL v2.0              //
+  // License: GNU GPL v2.0              //
  //  File: DA_Database.h               //
 ////////////////////////////////////////
 
