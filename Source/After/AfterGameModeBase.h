@@ -23,6 +23,8 @@ protected:
 	UDA_Database* Database; // The data asset with data about all gameplay objects
 
 public:
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 	UFUNCTION(BlueprintCallable, Category = "Database")
 	UDA_Database* GetDatabase() const; // Returns the database
 };

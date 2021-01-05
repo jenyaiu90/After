@@ -29,6 +29,9 @@ protected:
 	TMap<FDirection, UPaperFlipbook*> EntityDebugFlipbooks;
 
 public:
+	UFUNCTION()
+	void Check();
+
 			/* ENTITY */
 	UFUNCTION(BlueprintCallable)
 	FEntityInfo GetEntityData(const FGameplayTag Tag) const;

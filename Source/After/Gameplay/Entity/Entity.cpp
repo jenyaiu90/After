@@ -56,29 +56,6 @@ void AEntity::BeginPlay()
 		Health = EntityData.MaxHealth;
 		CollisionComponent->SetBoxExtent(FVector(EntityData.SizeX, EntityData.SizeY, 8.f));
 
-// Checking if there are textures
-		bool HasTexture = false;
-		for (FEntityStatus i = FEntityStatus::BEGIN; i <= FEntityStatus::END; ++i)
-		{
-			if (!EntityData.Flipbooks.Contains(i))
-			{
-				EntityData.Flipbooks.Add(i, FEntityFlipbooks());
-			}
-
-			for (FDirection j = FDirection::BEGIN; j <= FDirection::END; ++j)
-			{
-				if (!EntityData.Flipbooks[i].Flipbooks.Contains(j))
-				{
-					EntityData.Flipbooks[i].Flipbooks.Add(j, EntityDatabase->GetEntityDebugFlipbooks()[j]);
-					HasTexture = false;
-				}
-			}
-		}
-
-		if (!HasTexture)
-		{
-			UE_LOG(LogTemp, Error, TEXT("There is no flipbooks for the entity %s"), *Id.ToString());
-		}
 		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
 	}
 }
