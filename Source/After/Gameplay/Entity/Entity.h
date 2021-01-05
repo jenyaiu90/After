@@ -45,9 +45,6 @@ protected:
 	/* COMPONENTS */
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	class USceneComponent* SceneComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class UPaperFlipbookComponent* FlipbookComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")

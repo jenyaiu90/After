@@ -13,17 +13,14 @@
 #include "../../AfterGameModeBase.h"
 
 AEntity::AEntity() :
-	CurrentDirection(FDirection::F),
+	CurrentDirection(FDirection::L),
 	bIsRunning(false),
-	bIsMoving(false)
+	bIsMoving(true)
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	SetRootComponent(SceneComponent);
 	
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
-	CollisionComponent->SetupAttachment(GetRootComponent());
+	SetRootComponent(CollisionComponent);
 	CollisionComponent->SetBoxExtent(FVector(32.f, 32.f, 8.f));
 
 	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Flipbook"));
@@ -97,6 +94,8 @@ void AEntity::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FlipbookComponent->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
 
 	AAfterGameModeBase* AfterGameMode;
 	if (!Id.IsValid())
