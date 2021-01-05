@@ -42,11 +42,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float Health;
 
-	/* APPEARANCE */
-
-	UPROPERTY(BlueprintReadOnly, Category = "Appearance")
-	FDirection CurrentDirection;	// Current texture direction
-
 	/* COMPONENTS */
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -60,9 +55,27 @@ protected:
 
 	/* MOVING */
 
-	UPROPERTY(BlueprintReadOnly, Category = "Moving")
-	bool bIsRunning;
+	UFUNCTION(BlueprintCallable)
+	void SetIsMoving(const bool IsMoving);
 
 	UFUNCTION(BlueprintCallable)
-	void Move(const FDirection Direction);
+	void SetIsRunning(const bool IsRunning);
+
+	UFUNCTION(BlueprintCallable)
+	void SetDirection(const FDirection Direction);
+
+private:
+
+	/* APPEARANCE */
+	UFUNCTION()
+	void SetFlipbook();
+
+	/* MOVING */
+
+	FDirection CurrentDirection;
+
+	bool bIsRunning;
+
+	bool bIsMoving;
+
 };

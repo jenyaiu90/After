@@ -17,4 +17,6 @@ class AFTER_API ALast : public AEntity
 {
 	GENERATED_BODY()
 	
+public:
+	ALast();
 };
