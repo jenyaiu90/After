@@ -20,6 +20,8 @@ class AFTER_API ALast : public AEntity
 public:
 	ALast();
 
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,4 +31,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UCameraComponent* CameraComponent;
+
+private:
+	/* INPUT */
+	void ZoomIn();
+	void ZoomOut();
 };
