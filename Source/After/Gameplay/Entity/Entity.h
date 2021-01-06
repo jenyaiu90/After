@@ -52,27 +52,20 @@ protected:
 
 	/* MOVING */
 
-	UFUNCTION(BlueprintCallable)
-	void SetIsMoving(const bool IsMoving);
+	UPROPERTY(BlueprintReadOnly, Category = "Moving")
+	bool bIsRunning;
 
-	UFUNCTION(BlueprintCallable)
-	void SetIsRunning(const bool IsRunning);
+	UPROPERTY(BlueprintReadOnly, Category = "Moving")
+	int MovementX;
 
-	UFUNCTION(BlueprintCallable)
-	void SetDirection(const FDirection Direction);
+	UPROPERTY(BlueprintReadOnly, Category = "Moving")
+	int MovementY;
 
 private:
 
 	/* APPEARANCE */
-	UFUNCTION()
-	void SetFlipbook();
 
-	/* MOVING */
+	FDirection CurrentDirection;	// Current texture direction
 
-	FDirection CurrentDirection;
-
-	bool bIsRunning;
-
-	bool bIsMoving;
-
+	FEntityStatus CurrentStatus;	// Current texture status
 };

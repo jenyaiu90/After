@@ -16,17 +16,13 @@ UENUM(BlueprintType)
 enum class FDirection : uint8
 {
 	F,	// Forward
-	FR,	// Forward-right
 	R,	// Right
-	BR,	// Backward-right
 	B,	// Backward
-	BL,	// Backward-left
 	L,	// Left
-	FL,	// Forward-left
 
 	// !
 	BEGIN = F,
-	END = FL
+	END = L
 };
 inline void operator++(FDirection& Direction)
 {

@@ -14,8 +14,10 @@
 
 AEntity::AEntity() :
 	CurrentDirection(FDirection::F),
+	CurrentStatus(FEntityStatus::STAY),
 	bIsRunning(false),
-	bIsMoving(false)
+	MovementX(0),
+	MovementY(0)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -32,57 +34,55 @@ void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsMoving)
-	{
-		const float SQRT_2 = 1.41421f;
+	const float SQRT_2 = 1.41421f;
 
-		float Delta = (bIsRunning ? EntityData.RunSpeed : EntityData.WalkSpeed) * DeltaTime;
-		float Sqrt2_Delta = SQRT_2 * Delta;
-		FVector Offset;
-		switch (CurrentDirection)
+	FVector Offset(MovementX, MovementY, 0.f);
+	if (!Offset.IsZero())
+	{
+		Offset *= (bIsRunning ? EntityData.RunSpeed : EntityData.WalkSpeed) * DeltaTime;
+		if (MovementX != 0 && MovementY != 0)
 		{
-		case FDirection::F:
-		{
-			Offset = FVector(0.f, -Delta, 0.f);
-			break;
-		}
-		case FDirection::FR:
-		{
-			Offset = FVector(Sqrt2_Delta, -Sqrt2_Delta, 0.f);
-			break;
-		}
-		case FDirection::R:
-		{
-			Offset = FVector(Delta, 0.f, 0.f);
-			break;
-		}
-		case FDirection::BR:
-		{
-			Offset = FVector(Sqrt2_Delta, Sqrt2_Delta, 0.f);
-			break;
-		}
-		case FDirection::B:
-		{
-			Offset = FVector(0.f, Delta, 0.f);
-			break;
-		}
-		case FDirection::BL:
-		{
-			Offset = FVector(-Sqrt2_Delta, Sqrt2_Delta, 0.f);
-			break;
-		}
-		case FDirection::L:
-		{
-			Offset = FVector(-Delta, 0.f, 0.f);
-			break;
-		}
-		case FDirection::FL:
-		{
-			Offset = FVector(-Sqrt2_Delta, -Sqrt2_Delta, 0.f);
-			break;
-		}
+			Offset /= SQRT_2;
 		}
 		AddActorLocalOffset(Offset, true);
+
+		FDirection RequiredDirection;
+		if (MovementY < 0)
+		{
+			RequiredDirection = FDirection::F;
+		}
+		else if (MovementY > 0)
+		{
+			RequiredDirection = FDirection::B;
+		}
+		else if (MovementX < 0)
+		{
+			RequiredDirection = FDirection::L;
+		}
+		else
+		{
+			RequiredDirection = FDirection::R;
+		}
+		if (CurrentDirection != RequiredDirection)
+		{
+			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[RequiredDirection]);
+			CurrentDirection = RequiredDirection;
+		}
+
+		FEntityStatus RequiredStatus = bIsRunning ? FEntityStatus::RUN : FEntityStatus::WALK;
+		if (CurrentStatus != RequiredStatus)
+		{
+			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[RequiredStatus].Flipbooks[CurrentDirection]);
+			CurrentStatus = RequiredStatus;
+		}
+	}
+	else
+	{
+		if (CurrentStatus != FEntityStatus::STAY)
+		{
+			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
+			CurrentStatus = FEntityStatus::STAY;
+		}
 	}
 }
 
@@ -119,31 +119,7 @@ void AEntity::BeginPlay()
 		Health = EntityData.MaxHealth;
 		CollisionComponent->SetBoxExtent(FVector(EntityData.SizeX * 32.f, EntityData.SizeY * 32.f, 8.f));
 
-		// If the game chashes here, most likely you should just add a data about your entity to the database
+		// If the game chashes here, most likely you should just add a data about your entity in the database
 		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
 	}
-}
-
-void AEntity::SetIsMoving(const bool IsMoving)
-{
-	bIsMoving = IsMoving;
-	SetFlipbook();
-}
-
-void AEntity::SetIsRunning(const bool IsRunning)
-{
-	bIsRunning = IsRunning;
-	SetFlipbook();
-}
-
-void AEntity::SetDirection(const FDirection Direction)
-{
-	CurrentDirection = Direction;
-	SetFlipbook();
-}
-
-void AEntity::SetFlipbook()
-{
-	FEntityStatus Status = bIsMoving ? (bIsRunning ? FEntityStatus::RUN : FEntityStatus::WALK) : FEntityStatus::STAY;
-	FlipbookComponent->SetFlipbook(EntityData.Flipbooks[Status].Flipbooks[CurrentDirection]);
 }

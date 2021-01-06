@@ -36,4 +36,6 @@ private:
 	/* INPUT */
 	void ZoomIn();
 	void ZoomOut();
+	void MoveX(float Val);
+	void MoveY(float Val);
 };
