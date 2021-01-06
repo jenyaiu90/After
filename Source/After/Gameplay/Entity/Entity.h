@@ -44,10 +44,10 @@ protected:
 
 	/* COMPONENTS */
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UPaperFlipbookComponent* FlipbookComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* CollisionComponent;
 
 	/* MOVING */

@@ -75,23 +75,23 @@ public:
 	/* STATS */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
-	float MaxHealth;
+	float MaxHealth = 100.f;
 
 	/* MOVING */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Moving")
-	float WalkSpeed;
+	float WalkSpeed = 50.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Moving")
-	float RunSpeed;
+	float RunSpeed = 75.f;
 
 	/* APPEARANCE */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	int SizeX;
+	int SizeX = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	int SizeY;
+	int SizeY = 1;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TMap<FEntityStatus, FEntityFlipbooks> Flipbooks;	// The flipbooks for statuses

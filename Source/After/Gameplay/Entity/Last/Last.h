@@ -19,4 +19,14 @@ class AFTER_API ALast : public AEntity
 	
 public:
 	ALast();
+
+protected:
+	virtual void BeginPlay() override;
+
+	/* COMPONENTS */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class USpringArmComponent* SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UCameraComponent* CameraComponent;
 };

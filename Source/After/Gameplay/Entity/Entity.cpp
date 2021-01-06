@@ -13,9 +13,9 @@
 #include "../../AfterGameModeBase.h"
 
 AEntity::AEntity() :
-	CurrentDirection(FDirection::L),
+	CurrentDirection(FDirection::F),
 	bIsRunning(false),
-	bIsMoving(true)
+	bIsMoving(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -119,6 +119,7 @@ void AEntity::BeginPlay()
 		Health = EntityData.MaxHealth;
 		CollisionComponent->SetBoxExtent(FVector(EntityData.SizeX * 32.f, EntityData.SizeY * 32.f, 8.f));
 
+		// If the game chashes here, most likely you should just add a data about your entity to the database
 		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
 	}
 }
