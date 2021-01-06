@@ -56,10 +56,10 @@ protected:
 	bool bIsRunning;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Moving")
-	int MovementX;
+	float MovementX;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Moving")
-	int MovementY;
+	float MovementY;
 
 private:
 

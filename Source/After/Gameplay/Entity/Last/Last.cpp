@@ -30,6 +30,8 @@ void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("ZoomIn", IE_Pressed, this, &ALast::ZoomIn);
 	PlayerInputComponent->BindAction("ZoomOut", IE_Pressed, this, &ALast::ZoomOut);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ALast::StartRunning);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &ALast::StopRunning);
 }
 
 void ALast::BeginPlay()
@@ -51,6 +53,16 @@ void ALast::ZoomOut()
 	SpringArmComponent->TargetArmLength = FMath::Clamp(
 		SpringArmComponent->TargetArmLength * 1.25f,
 		200.f, 2000.f);
+}
+
+void ALast::StartRunning()
+{
+	bIsRunning = true;
+}
+
+void ALast::StopRunning()
+{
+	bIsRunning = false;
 }
 
 void ALast::MoveX(float Val)
