@@ -57,12 +57,12 @@ void ALast::ZoomOut()
 
 void ALast::StartRunning()
 {
-	bIsRunning = true;
+	Super::StartRunning();
 }
 
 void ALast::StopRunning()
 {
-	bIsRunning = false;
+	Super::StopRunning();
 }
 
 void ALast::MoveX(float Val)

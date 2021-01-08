@@ -73,6 +73,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float MaxHealth = 100.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	float MaxEnergy = 100.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	float EnergySpeed = 5.f;
+
 	/* MOVING */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Moving")

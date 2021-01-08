@@ -34,11 +34,18 @@ void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Green, FString::Printf(TEXT("Energy: %f"), Energy));
+
 	const float SQRT_2 = 1.41421f;
 
 	FVector Offset(MovementX, MovementY, 0.f);
 	if (!Offset.IsZero())
 	{
+		if (bIsRunning && Energy <= 0.f)
+		{
+			Energy = 0.f;
+			StopRunning();
+		}
 		Offset *= (bIsRunning ? EntityData.RunSpeed : EntityData.WalkSpeed) * DeltaTime;
 		if (MovementX != 0 && MovementY != 0)
 		{
@@ -74,6 +81,10 @@ void AEntity::Tick(float DeltaTime)
 		{
 			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[RequiredStatus].Flipbooks[CurrentDirection]);
 			CurrentStatus = RequiredStatus;
+		}
+		if (bIsRunning)
+		{
+			Energy -= EntityData.EnergySpeed * DeltaTime;
 		}
 	}
 	else
@@ -117,9 +128,23 @@ void AEntity::BeginPlay()
 		EntityData = EntityDatabase->GetEntityData(Id);
 
 		Health = EntityData.MaxHealth;
+		Energy = EntityData.MaxEnergy;
 		CollisionComponent->SetBoxExtent(FVector(EntityData.SizeX * 32.f, EntityData.SizeY * 32.f, 8.f));
 
 		// If the game chashes here, most likely you should just add a data about your entity in the database
 		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
 	}
+}
+
+void AEntity::StartRunning()
+{
+	if (Energy > 0.f)
+	{
+		bIsRunning = true;
+	}
+}
+
+void AEntity::StopRunning()
+{
+	bIsRunning = false;
 }

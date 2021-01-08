@@ -25,7 +25,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	/* COMPONENTS */
+			/* COMPONENTS */
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USpringArmComponent* SpringArmComponent;
 
@@ -33,7 +34,8 @@ protected:
 	class UCameraComponent* CameraComponent;
 
 private:
-	/* INPUT */
+			/* INPUT */
+
 	void ZoomIn();
 	void ZoomOut();
 	void StartRunning();

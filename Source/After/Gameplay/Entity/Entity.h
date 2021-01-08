@@ -29,7 +29,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	/* GENERAL */
+			/* GENERAL */
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General")
 	FGameplayTag Id;
@@ -37,12 +37,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
 	FEntityInfo EntityData;
 
-	/* STATS */
+			/* STATS */
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float Health;
 
-	/* COMPONENTS */
+	UPROPERTY(BlueprintReadOnly, Category = "Stats")
+	float Energy;
+
+			/* COMPONENTS */
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UPaperFlipbookComponent* FlipbookComponent;
@@ -50,7 +53,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* CollisionComponent;
 
-	/* MOVING */
+			/* MOVING */
 
 	UPROPERTY(BlueprintReadOnly, Category = "Moving")
 	bool bIsRunning;
@@ -61,11 +64,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Moving")
 	float MovementY;
 
-private:
+	void StartRunning();
+	void StopRunning();
 
-	/* APPEARANCE */
+private:
+			/* APPEARANCE */
 
 	FDirection CurrentDirection;	// Current texture direction
-
 	FEntityStatus CurrentStatus;	// Current texture status
 };
