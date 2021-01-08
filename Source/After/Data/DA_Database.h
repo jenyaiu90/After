@@ -22,6 +22,7 @@ class AFTER_API UDA_Database : public UDataAsset
 	
 protected:
 			/* ENTITY */
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Entity")
 	TMap<FGameplayTag, FEntityInfo> EntityData;
 
@@ -33,6 +34,7 @@ public:
 	void Check();
 
 			/* ENTITY */
+
 	UFUNCTION(BlueprintCallable)
 	FEntityInfo GetEntityData(const FGameplayTag Tag) const;
 

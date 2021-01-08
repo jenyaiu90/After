@@ -106,6 +106,8 @@ void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetWorld()->GetTimerManager().SetTimer(StatsTimer, this, &AEntity::CalculateStats, 1.f, true, 1.f);
+
 	FlipbookComponent->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
 
 	AAfterGameModeBase* AfterGameMode;
@@ -133,6 +135,14 @@ void AEntity::BeginPlay()
 
 		// If the game chashes here, most likely you should just add a data about your entity in the database
 		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
+	}
+}
+
+void AEntity::CalculateStats()
+{
+	if (!bIsRunning || MovementX == 0.f && MovementY == 0.f)
+	{
+		Energy = FMath::Clamp(Energy + EntityData.EnergyRegenerationSpeed, 0.f, EntityData.MaxEnergy);
 	}
 }
 

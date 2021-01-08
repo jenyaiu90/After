@@ -29,6 +29,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+			/* TIMERS */
+
+	FTimerHandle StatsTimer;
+
 			/* GENERAL */
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General")
@@ -38,6 +42,9 @@ protected:
 	FEntityInfo EntityData;
 
 			/* STATS */
+
+	UFUNCTION()
+	void CalculateStats();
 
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float Health;
