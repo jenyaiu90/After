@@ -26,12 +26,22 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+			/* STATS */
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void Damage(float Value, FDamageType DamageType, AEntity* FromWho);
+
+	//	UFUNCTION(BlueprintCallable, Category = "Stats")
+	//	void Damage(float Value, FDamageType DamageType, class AObject* FromWho);
+
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void Death(AEntity* Murderer);
+
+	//	UFUNCTION(BlueprintCallable, Category = "Stats")
+	//	void Death(class AObject* Murderer);
+
 protected:
 	virtual void BeginPlay() override;
-
-			/* TIMERS */
-
-	FTimerHandle StatsTimer;
 
 			/* GENERAL */
 
@@ -42,6 +52,9 @@ protected:
 	FEntityInfo EntityData;
 
 			/* STATS */
+
+	UPROPERTY(BlueprintReadOnly, Category = "General")
+	bool bIsDead;
 
 	UFUNCTION()
 	void CalculateStats();
@@ -75,8 +88,22 @@ protected:
 	void StopRunning();
 
 private:
+			/* TIMERS */
+
+	FTimerHandle StatsTimer;
+	FTimerHandle TextureTimer;
+
+			/* STATS */
+
+	void Damage(float Value, FDamageType DamageType);	// Shouldn't be called
+	void Death();										//		directly.
+
 			/* APPEARANCE */
 
 	FDirection CurrentDirection;	// Current texture direction
 	FEntityStatus CurrentStatus;	// Current texture status
+	bool bIsTextureBlocked;			// Texture is not looping
+
+	UFUNCTION()
+	void UnblockTexture();			// Unblocks texture
 };

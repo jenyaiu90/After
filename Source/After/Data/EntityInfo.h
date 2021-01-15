@@ -8,59 +8,9 @@
 
 #include "CoreMinimal.h"
 
-#include "PaperFlipbook.h"
+#include "Types.h"
 
 #include "EntityInfo.generated.h"
-
-UENUM(BlueprintType)
-enum class FDirection : uint8
-{
-	F,	// Forward
-	R,	// Right
-	B,	// Backward
-	L,	// Left
-
-	// !
-	BEGIN = F,
-	END = L
-};
-inline void operator++(FDirection& Direction)
-{
-	Direction = static_cast<FDirection>(static_cast<int>(Direction) + 1);
-}
-
-UENUM(BlueprintType)
-enum class FEntityStatus : uint8
-{
-	STAY,
-	WALK,
-	RUN,
-	SWIM,
-	ATTACK,
-	LONG_ATTACK,
-	DEATH,
-	DAMAGE,
-	STONE,
-	WEB,
-	SPECIAL,
-
-	// !
-	BEGIN = STAY,
-	END = SPECIAL
-};
-inline void operator++(FEntityStatus& Status)
-{
-	Status = static_cast<FEntityStatus>(static_cast<int>(Status) + 1);
-}
-
-USTRUCT(BlueprintType)
-struct FEntityFlipbooks
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Flipbook")
-	TMap<FDirection, UPaperFlipbook*> Flipbooks;	// Flipbooks for directions
-};
 
 USTRUCT(BlueprintType)
 struct FEntityInfo
@@ -72,6 +22,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float MaxHealth = 100.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
+	TMap<FDamageType, float> DamageResist;	// Damage is multiples by this value; <1 - resist; >1 - vulnerability
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")
 	float MaxEnergy = 100.f;

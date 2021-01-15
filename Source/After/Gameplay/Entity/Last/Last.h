@@ -20,6 +20,8 @@ class AFTER_API ALast : public AEntity
 public:
 	ALast();
 
+	virtual void Tick(float DeltaTime) override;
+
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
@@ -34,6 +36,8 @@ protected:
 	class UCameraComponent* CameraComponent;
 
 private:
+	void TmpDamage();
+
 			/* INPUT */
 
 	void ZoomIn();

@@ -14,10 +14,12 @@
 
 AEntity::AEntity() :
 	CurrentDirection(FDirection::F),
-	CurrentStatus(FEntityStatus::STAY),
+	CurrentStatus(FEntityStatus::Stay),
+	bIsDead(false),
 	bIsRunning(false),
 	MovementX(0),
-	MovementY(0)
+	MovementY(0),
+	bIsTextureBlocked(false)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -34,65 +36,68 @@ void AEntity::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Green, FString::Printf(TEXT("Energy: %f"), Energy));
-
-	const float SQRT_2 = 1.41421f;
-
-	FVector Offset(MovementX, MovementY, 0.f);
-	if (!Offset.IsZero())
+	if (!bIsDead)
 	{
-		if (bIsRunning && Energy <= 0.f)
-		{
-			Energy = 0.f;
-			StopRunning();
-		}
-		Offset *= (bIsRunning ? EntityData.RunSpeed : EntityData.WalkSpeed) * DeltaTime;
-		if (MovementX != 0 && MovementY != 0)
-		{
-			Offset /= SQRT_2;
-		}
-		AddActorLocalOffset(Offset, true);
+		const float Sqrt_2 = 1.41421f;
 
-		FDirection RequiredDirection;
-		if (MovementY < 0)
+		FVector Offset(MovementX, MovementY, 0.f);
+		if (!Offset.IsZero())
 		{
-			RequiredDirection = FDirection::F;
-		}
-		else if (MovementY > 0)
-		{
-			RequiredDirection = FDirection::B;
-		}
-		else if (MovementX < 0)
-		{
-			RequiredDirection = FDirection::L;
+			if (bIsRunning && Energy <= 0.f)
+			{
+				Energy = 0.f;
+				StopRunning();
+			}
+			Offset *= (bIsRunning ? EntityData.RunSpeed : EntityData.WalkSpeed) * DeltaTime;
+			if (MovementX != 0 && MovementY != 0)
+			{
+				Offset /= Sqrt_2;
+			}
+			AddActorLocalOffset(Offset, true);
+
+			FDirection RequiredDirection;
+			if (MovementY < 0)
+			{
+				RequiredDirection = FDirection::F;
+			}
+			else if (MovementY > 0)
+			{
+				RequiredDirection = FDirection::B;
+			}
+			else if (MovementX < 0)
+			{
+				RequiredDirection = FDirection::L;
+			}
+			else
+			{
+				RequiredDirection = FDirection::R;
+			}
+			if (CurrentDirection != RequiredDirection)
+			{
+				FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[RequiredDirection]);
+				CurrentDirection = RequiredDirection;
+			}
+
+			FEntityStatus RequiredStatus = bIsRunning ? FEntityStatus::Run : FEntityStatus::Walk;
+			if (!bIsTextureBlocked && CurrentStatus != RequiredStatus)
+			{
+				FlipbookComponent->SetFlipbook(EntityData.Flipbooks[RequiredStatus].Flipbooks[CurrentDirection]);
+				FlipbookComponent->SetLooping(true);
+				CurrentStatus = RequiredStatus;
+			}
+			if (bIsRunning)
+			{
+				Energy -= EntityData.EnergySpeed * DeltaTime;
+			}
 		}
 		else
 		{
-			RequiredDirection = FDirection::R;
-		}
-		if (CurrentDirection != RequiredDirection)
-		{
-			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[RequiredDirection]);
-			CurrentDirection = RequiredDirection;
-		}
-
-		FEntityStatus RequiredStatus = bIsRunning ? FEntityStatus::RUN : FEntityStatus::WALK;
-		if (CurrentStatus != RequiredStatus)
-		{
-			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[RequiredStatus].Flipbooks[CurrentDirection]);
-			CurrentStatus = RequiredStatus;
-		}
-		if (bIsRunning)
-		{
-			Energy -= EntityData.EnergySpeed * DeltaTime;
-		}
-	}
-	else
-	{
-		if (CurrentStatus != FEntityStatus::STAY)
-		{
-			FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
-			CurrentStatus = FEntityStatus::STAY;
+			if (!bIsTextureBlocked && CurrentStatus != FEntityStatus::Stay)
+			{
+				FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::Stay].Flipbooks[CurrentDirection]);
+				FlipbookComponent->SetLooping(true);
+				CurrentStatus = FEntityStatus::Stay;
+			}
 		}
 	}
 }
@@ -100,6 +105,20 @@ void AEntity::Tick(float DeltaTime)
 void AEntity::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void AEntity::Damage(float Value, FDamageType DamageType, AEntity* FromWho)
+{
+	Damage(Value, DamageType);
+	if (Health <= 0.f)
+	{
+		Death(FromWho);
+	}
+}
+
+void AEntity::Death(AEntity* Murderer)
+{
+	Death();
 }
 
 void AEntity::BeginPlay()
@@ -134,7 +153,7 @@ void AEntity::BeginPlay()
 		CollisionComponent->SetBoxExtent(FVector(EntityData.SizeX * 32.f, EntityData.SizeY * 32.f, 8.f));
 
 		// If the game chashes here, most likely you should just add a data about your entity in the database
-		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[FEntityStatus::STAY].Flipbooks[CurrentDirection]);
+		FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
 	}
 }
 
@@ -144,6 +163,26 @@ void AEntity::CalculateStats()
 	{
 		Energy = FMath::Clamp(Energy + EntityData.EnergyRegenerationSpeed, 0.f, EntityData.MaxEnergy);
 	}
+}
+
+void AEntity::Damage(float Value, FDamageType DamageType)
+{
+	Health -= Value * EntityData.DamageResist[DamageType];
+	CurrentStatus = FEntityStatus::Damage;
+	FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
+	FlipbookComponent->SetLooping(false);
+	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, FlipbookComponent->GetFlipbookLength(), false);
+}
+
+void AEntity::Death()
+{
+	Health = 0.f;
+	CurrentStatus = FEntityStatus::Death;
+	FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
+	FlipbookComponent->SetLooping(false);
+	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, 4 * FlipbookComponent->GetFlipbookLength(), false);
+
+	bIsDead = true;
 }
 
 void AEntity::StartRunning()
@@ -157,4 +196,14 @@ void AEntity::StartRunning()
 void AEntity::StopRunning()
 {
 	bIsRunning = false;
+}
+
+void AEntity::UnblockTexture()
+{
+	bIsTextureBlocked = false;
+
+	if (bIsDead)
+	{
+		Destroy();
+	}
 }

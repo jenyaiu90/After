@@ -12,6 +12,8 @@
 ALast::ALast() :
 	AEntity()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->TargetArmLength = 500.f;
@@ -19,6 +21,14 @@ ALast::ALast() :
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+}
+
+void ALast::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Yellow, FString::Printf(TEXT("Energy: %f"), Energy));
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Health: %f"), Health));
 }
 
 void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -37,6 +47,14 @@ void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ALast::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FTimerHandle TempTimer;
+	GetWorld()->GetTimerManager().SetTimer(TempTimer, this, &ALast::TmpDamage, 5.f, true);
+
+	if (GetController() && Cast<APlayerController>(GetController()))
+	{
+		Cast<APlayerController>(GetController())->SetShowMouseCursor(true);
+	}
 
 	SpringArmComponent->SetRelativeRotation(FRotator(-90.f, -90.f, 0.f));
 }
@@ -73,4 +91,9 @@ void ALast::MoveX(float Val)
 void ALast::MoveY(float Val)
 {
 	MovementY = FMath::Clamp(Val, -1.f, 1.f);
+}
+
+void ALast::TmpDamage()
+{
+	Damage(25.f, FDamageType::Strike, this);
 }
