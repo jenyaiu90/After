@@ -26,6 +26,7 @@ AEntity::AEntity() :
 	CollisionComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
 	SetRootComponent(CollisionComponent);
 	CollisionComponent->SetBoxExtent(FVector(32.f, 32.f, 8.f));
+	CollisionComponent->SetCollisionProfileName(FName("Entity"));
 
 	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Flipbook"));
 	FlipbookComponent->SetupAttachment(GetRootComponent());

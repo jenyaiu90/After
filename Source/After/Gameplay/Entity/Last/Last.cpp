@@ -9,6 +9,8 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+#include "Components/BoxComponent.h"
+
 ALast::ALast() :
 	AEntity()
 {
@@ -29,6 +31,13 @@ void ALast::Tick(float DeltaTime)
 
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Yellow, FString::Printf(TEXT("Energy: %f"), Energy));
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Health: %f"), Health));
+
+	TArray<AActor*> Overlapping;
+	CollisionComponent->GetOverlappingActors(Overlapping);
+	for (AActor* i : Overlapping)
+	{
+		UE_LOG(LogTemp, Log, TEXT("%s"), *i->GetName());
+	}
 }
 
 void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -47,9 +56,6 @@ void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void ALast::BeginPlay()
 {
 	Super::BeginPlay();
-
-	FTimerHandle TempTimer;
-	GetWorld()->GetTimerManager().SetTimer(TempTimer, this, &ALast::TmpDamage, 5.f, true);
 
 	if (GetController() && Cast<APlayerController>(GetController()))
 	{
@@ -91,9 +97,4 @@ void ALast::MoveX(float Val)
 void ALast::MoveY(float Val)
 {
 	MovementY = FMath::Clamp(Val, -1.f, 1.f);
-}
-
-void ALast::TmpDamage()
-{
-	Damage(25.f, FDamageType::Strike, this);
 }

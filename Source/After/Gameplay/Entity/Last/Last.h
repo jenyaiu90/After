@@ -36,8 +36,6 @@ protected:
 	class UCameraComponent* CameraComponent;
 
 private:
-	void TmpDamage();
-
 			/* INPUT */
 
 	void ZoomIn();
