@@ -65,6 +65,11 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Stats")
 	float Energy;
 
+			/* ATTACK */
+
+	UFUNCTION(BlueprintCallable)
+	bool MeleeAttack(AEntity* Attacked);
+
 			/* COMPONENTS */
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")

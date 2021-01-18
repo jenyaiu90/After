@@ -166,6 +166,23 @@ void AEntity::CalculateStats()
 	}
 }
 
+bool AEntity::MeleeAttack(AEntity* Attacked)
+{
+	CurrentStatus = FEntityStatus::MeleeAttack;
+	FlipbookComponent->SetFlipbook(EntityData.Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
+	FlipbookComponent->SetLooping(false);
+	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, FlipbookComponent->GetFlipbookLength(), false);
+	if (FVector::Dist(Attacked->GetActorLocation(), GetActorLocation()) <= EntityData.MeleeRadius)
+	{
+		Attacked->Damage(EntityData.MeleeDamage, EntityData.MeleeDamageType, this);
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void AEntity::Damage(float Value, FDamageType DamageType)
 {
 	Health -= Value * EntityData.DamageResist[DamageType];
