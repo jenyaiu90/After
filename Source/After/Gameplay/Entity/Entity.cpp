@@ -108,6 +108,29 @@ void AEntity::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AEntity::StartRunning()
+{
+	if (Energy > 0.f)
+	{
+		bIsRunning = true;
+	}
+}
+
+void AEntity::StopRunning()
+{
+	bIsRunning = false;
+}
+
+void AEntity::MoveX(float Val)
+{
+	MovementX = FMath::Clamp(Val, -1.f, 1.f);
+}
+
+void AEntity::MoveY(float Val)
+{
+	MovementY = FMath::Clamp(Val, -1.f, 1.f);
+}
+
 void AEntity::Damage(float Value, FDamageType DamageType, AEntity* FromWho)
 {
 	Damage(Value, DamageType);
@@ -201,19 +224,6 @@ void AEntity::Death()
 	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, 4 * FlipbookComponent->GetFlipbookLength(), false);
 
 	bIsDead = true;
-}
-
-void AEntity::StartRunning()
-{
-	if (Energy > 0.f)
-	{
-		bIsRunning = true;
-	}
-}
-
-void AEntity::StopRunning()
-{
-	bIsRunning = false;
 }
 
 void AEntity::UnblockTexture()

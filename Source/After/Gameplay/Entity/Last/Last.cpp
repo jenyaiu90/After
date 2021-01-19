@@ -43,26 +43,6 @@ void ALast::Tick(float DeltaTime)
 void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis("MoveX", this, &ALast::MoveX);
-	PlayerInputComponent->BindAxis("MoveY", this, &ALast::MoveY);
-
-	PlayerInputComponent->BindAction("ZoomIn", IE_Pressed, this, &ALast::ZoomIn);
-	PlayerInputComponent->BindAction("ZoomOut", IE_Pressed, this, &ALast::ZoomOut);
-	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &ALast::StartRunning);
-	PlayerInputComponent->BindAction("Run", IE_Released, this, &ALast::StopRunning);
-}
-
-void ALast::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (GetController() && Cast<APlayerController>(GetController()))
-	{
-		Cast<APlayerController>(GetController())->SetShowMouseCursor(true);
-	}
-
-	SpringArmComponent->SetRelativeRotation(FRotator(-90.f, -90.f, 0.f));
 }
 
 void ALast::ZoomIn()
@@ -79,22 +59,9 @@ void ALast::ZoomOut()
 		200.f, 2000.f);
 }
 
-void ALast::StartRunning()
+void ALast::BeginPlay()
 {
-	Super::StartRunning();
-}
+	Super::BeginPlay();
 
-void ALast::StopRunning()
-{
-	Super::StopRunning();
-}
-
-void ALast::MoveX(float Val)
-{
-	MovementX = FMath::Clamp(Val, -1.f, 1.f);
-}
-
-void ALast::MoveY(float Val)
-{
-	MovementY = FMath::Clamp(Val, -1.f, 1.f);
+	SpringArmComponent->SetRelativeRotation(FRotator(-90.f, -90.f, 0.f));
 }

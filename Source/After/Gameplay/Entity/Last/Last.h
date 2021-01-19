@@ -24,6 +24,11 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+			/* MOVEMENT */
+
+	void ZoomIn();
+	void ZoomOut();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -34,14 +39,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UCameraComponent* CameraComponent;
-
-private:
-			/* INPUT */
-
-	void ZoomIn();
-	void ZoomOut();
-	void StartRunning();
-	void StopRunning();
-	void MoveX(float Val);
-	void MoveY(float Val);
 };

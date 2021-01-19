@@ -26,6 +26,13 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+			/* MOVEMENT */
+
+	void StartRunning();
+	void StopRunning();
+	void MoveX(float Val);
+	void MoveY(float Val);
+
 			/* STATS */
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
@@ -88,9 +95,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Moving")
 	float MovementY;
-
-	void StartRunning();
-	void StopRunning();
 
 private:
 			/* TIMERS */
