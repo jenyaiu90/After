@@ -21,6 +21,11 @@ void ALastController::BeginPlay()
 
 void ALastController::SetupInput()
 {
+	if (CurrentInputStack.Num() <= 0)
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("Input stack is empty."));
+	}
+
 	ALast* Last = Cast<ALast>(GetPawn());
 
 	if (Last)

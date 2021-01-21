@@ -7,7 +7,6 @@
 #include "Entity.h"
 
 #include "PaperFlipbookComponent.h"
-#include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 
 #include "../../AfterGameModeBase.h"
@@ -156,21 +155,21 @@ void AEntity::BeginPlay()
 	AAfterGameModeBase* AfterGameMode;
 	if (!Id.IsValid())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Couldn't load a data of an entity %s because its tag is not valid"), *Id.ToString());
+		UE_LOG(LogTemp, Fatal, TEXT("Couldn't load a data of an entity %s because its tag is not valid"), *Id.ToString());
 	}
 	else if (!GetWorld())
 	{
-		UE_LOG(LogTemp, Error, TEXT("Couldn't load a data of an entity %s because the world wasn't found"), *Id.ToString());
+		UE_LOG(LogTemp, Fatal, TEXT("Couldn't load a data of an entity %s because the world wasn't found"), *Id.ToString());
 	}
 	else if (AfterGameMode = Cast<AAfterGameModeBase>(GetWorld()->GetAuthGameMode()),
 		!AfterGameMode)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Couldn't load a data of an entity %s because the gamemode wasn't found"), *Id.ToString());
+		UE_LOG(LogTemp, Fatal, TEXT("Couldn't load a data of an entity %s because the gamemode wasn't found"), *Id.ToString());
 	}
 	else
 	{
-		UDA_Database* EntityDatabase = AfterGameMode->GetDatabase();
-		EntityData = EntityDatabase->GetEntityData(Id);
+		UDA_Database* Database = AfterGameMode->GetDatabase();
+		EntityData = Database->GetEntityData(Id);
 
 		Health = EntityData.MaxHealth;
 		Energy = EntityData.MaxEnergy;

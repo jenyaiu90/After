@@ -72,3 +72,8 @@ TMap<FDirection, UPaperFlipbook*> UDA_Database::GetEntityDebugFlipbooks() const
 {
 	return EntityDebugFlipbooks;
 }
+
+FUnitInfo UDA_Database::GetUnitData(const FGameplayTag Tag) const
+{
+	return UnitData.Contains(Tag) ? UnitData[Tag] : FUnitInfo();
+}

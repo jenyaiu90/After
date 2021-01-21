@@ -12,6 +12,7 @@
 #include "GameplayTagContainer.h"
 
 #include "EntityInfo.h"
+#include "UnitInfo.h"
 
 #include "DA_Database.generated.h"
 
@@ -29,6 +30,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Entity")
 	TMap<FDirection, UPaperFlipbook*> EntityDebugFlipbooks;
 
+			/* UNIT */
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Unit")
+	TMap<FGameplayTag, FUnitInfo> UnitData;
+
 public:
 	UFUNCTION()
 	void Check();
@@ -40,4 +46,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TMap<FDirection, UPaperFlipbook*> GetEntityDebugFlipbooks() const;
+
+			/* UNIT */
+
+	UFUNCTION(BlueprintCallable)
+	FUnitInfo GetUnitData(const FGameplayTag Tag) const;
 };
