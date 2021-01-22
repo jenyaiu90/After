@@ -18,6 +18,11 @@ struct FEntityInfo
 	GENERATED_USTRUCT_BODY()
 
 public:
+	FEntityInfo()
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Construct!"));
+	}
+
 			/* STATS */
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stats")

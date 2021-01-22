@@ -42,7 +42,7 @@ public:
 			/* ENTITY */
 
 	UFUNCTION(BlueprintCallable)
-	FEntityInfo GetEntityData(const FGameplayTag Tag) const;
+	const FEntityInfo& GetEntityData(const FGameplayTag Tag) const;
 
 	UFUNCTION(BlueprintCallable)
 	TMap<FDirection, UPaperFlipbook*> GetEntityDebugFlipbooks() const;
@@ -50,5 +50,5 @@ public:
 			/* UNIT */
 
 	UFUNCTION(BlueprintCallable)
-	FUnitInfo GetUnitData(const FGameplayTag Tag) const;
+	const FUnitInfo& GetUnitData(const FGameplayTag Tag) const;
 };

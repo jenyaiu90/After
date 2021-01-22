@@ -74,10 +74,15 @@ void AUnit::BeginPlay()
 		}
 	
 		UDA_Database* Database = AfterGameMode->GetDatabase();
-		UnitData = Database->GetUnitData(Id);
+		UnitData = &Database->GetUnitData(Id);
 
-		CollisionComponent->SetBoxExtent(FVector(UnitData.SizeX * 32.f, UnitData.SizeY * 32.f, 8.f));
+		CollisionComponent->SetBoxExtent(FVector(UnitData->SizeX * 32.f, UnitData->SizeY * 32.f, 8.f));
 
-		SpriteComponent->SetSprite(UnitData.Sprite);
+		SpriteComponent->SetSprite(UnitData->Sprite);
 	}
+}
+
+const FUnitInfo& AUnit::GetUnitData() const
+{
+	return *UnitData;
 }

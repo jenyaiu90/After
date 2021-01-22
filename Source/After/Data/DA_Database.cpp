@@ -63,9 +63,13 @@ void UDA_Database::Check()
 	}
 }
 
-FEntityInfo UDA_Database::GetEntityData(const FGameplayTag Tag) const
+const FEntityInfo& UDA_Database::GetEntityData(const FGameplayTag Tag) const
 {
-	return EntityData.Contains(Tag) ? EntityData[Tag] : FEntityInfo();
+	if (!EntityData.Contains(Tag))
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("Database doesn't contain data about entity %s"), *Tag.ToString());
+	}
+	return EntityData[Tag];
 }
 
 TMap<FDirection, UPaperFlipbook*> UDA_Database::GetEntityDebugFlipbooks() const
@@ -73,7 +77,11 @@ TMap<FDirection, UPaperFlipbook*> UDA_Database::GetEntityDebugFlipbooks() const
 	return EntityDebugFlipbooks;
 }
 
-FUnitInfo UDA_Database::GetUnitData(const FGameplayTag Tag) const
+const FUnitInfo& UDA_Database::GetUnitData(const FGameplayTag Tag) const
 {
-	return UnitData.Contains(Tag) ? UnitData[Tag] : FUnitInfo();
+	if (!UnitData.Contains(Tag))
+	{
+		UE_LOG(LogTemp, Fatal, TEXT("Database doesn't contain data about unit %s"), *Tag.ToString());
+	}
+	return UnitData[Tag];
 }

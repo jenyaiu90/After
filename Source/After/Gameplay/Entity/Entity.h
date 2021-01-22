@@ -60,8 +60,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "General")
 	FGameplayTag Id;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "General")
-	FEntityInfo EntityData;
+	const FEntityInfo* EntityData;
+
+	UFUNCTION(BlueprintCallable)
+	const FEntityInfo& GetEntityData() const;
 
 			/* STATS */
 
