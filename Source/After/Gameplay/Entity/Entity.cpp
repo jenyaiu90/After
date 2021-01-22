@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 
 #include "../../AfterGameModeBase.h"
+#include "Last/LastController.h"
 
 AEntity::AEntity() :
 	CurrentDirection(FDirection::F),
@@ -144,6 +145,16 @@ void AEntity::Death(AEntity* Murderer)
 	Death();
 }
 
+void AEntity::Select()
+{
+
+}
+
+void AEntity::Unselect()
+{
+
+}
+
 void AEntity::BeginPlay()
 {
 	Super::BeginPlay();
@@ -168,6 +179,16 @@ void AEntity::BeginPlay()
 	}
 	else
 	{
+		ALastController* LastController = Cast<ALastController>(GetWorld()->GetFirstPlayerController());
+		if (LastController)
+		{
+			OnBeginCursorOver.AddDynamic(LastController, &ALastController::Select);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Player controller (ALastController) wasn't found"));
+		}
+
 		UDA_Database* Database = AfterGameMode->GetDatabase();
 		EntityData = Database->GetEntityData(Id);
 

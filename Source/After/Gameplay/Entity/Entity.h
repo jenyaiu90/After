@@ -47,6 +47,11 @@ public:
 	//	UFUNCTION(BlueprintCallable, Category = "Stats")
 	//	void Death(class AObject* Murderer);
 
+			/* APPEARANCE */
+
+	void Select();
+	void Unselect();
+
 protected:
 	virtual void BeginPlay() override;
 

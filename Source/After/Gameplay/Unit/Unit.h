@@ -22,6 +22,13 @@ class AFTER_API AUnit : public AActor
 public:	
 	AUnit();
 
+	virtual void Tick(float DeltaTime) override;
+
+			/* APPEARANCE */
+
+	void Select();
+	void Unselect();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -41,7 +48,5 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* CollisionComponent;
 
-public:
-	virtual void Tick(float DeltaTime) override;
-
+private:
 };

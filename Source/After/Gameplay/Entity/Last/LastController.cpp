@@ -7,11 +7,60 @@
 #include "LastController.h"
 
 #include "Last.h"
+#include "../../Unit/Unit.h"
 
 ALastController::ALastController() :
 	APlayerController()
 {
 	SetShowMouseCursor(true);
+	bEnableMouseOverEvents = true;
+}
+
+void ALastController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Yellow, FString::Printf(TEXT("Selected: %s"), Selected ? *Selected->GetName() : *FString("None")));
+}
+
+void ALastController::Select(AActor* Actor)
+{
+	AEntity* Entity = Cast<AEntity>(Actor);
+	bool bNew = false;
+	AActor* Old = Selected;
+	if (Entity)
+	{
+		Selected = Entity;
+		Entity->Select();
+		bNew = true;
+	}
+	else
+	{
+		AUnit* Unit = Cast<AUnit>(Actor);
+		if (Unit)
+		{
+			Selected = Unit;
+			Unit->Select();
+			bNew = true;
+		}
+	}
+
+	if (bNew)
+	{
+		AEntity* OldEntity = Cast<AEntity>(Old);
+		if (OldEntity)
+		{
+			OldEntity->Unselect();
+		}
+		else
+		{
+			AUnit* OldUnit = Cast<AUnit>(Old);
+			if (OldUnit)
+			{
+				OldUnit->Unselect();
+			}
+		}
+	}
 }
 
 void ALastController::BeginPlay()

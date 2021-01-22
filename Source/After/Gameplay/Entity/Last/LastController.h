@@ -18,8 +18,15 @@ class AFTER_API ALastController : public APlayerController
 public:
 	ALastController();
 
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+	void Select(AActor* Actor);
+
 protected:
 	virtual void BeginPlay() override;
+
+	AActor* Selected;
 
 private:
 	void SetupInput();

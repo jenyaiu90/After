@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 
 #include "../../AfterGameModeBase.h"
+#include "../Entity/Last/LastController.h"
 
 AUnit::AUnit()
 {
@@ -23,6 +24,21 @@ AUnit::AUnit()
 	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Flipbook"));
 	SpriteComponent->SetupAttachment(GetRootComponent());
 	SpriteComponent->SetRelativeRotation(FRotator(0.f, 0.f, -90.f));
+}
+
+void AUnit::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+void AUnit::Select()
+{
+
+}
+
+void AUnit::Unselect()
+{
+
 }
 
 void AUnit::BeginPlay()
@@ -47,6 +63,16 @@ void AUnit::BeginPlay()
 	}
 	else
 	{
+		ALastController* LastController = Cast<ALastController>(GetWorld()->GetFirstPlayerController());
+		if (LastController)
+		{
+			OnBeginCursorOver.AddDynamic(LastController, &ALastController::Select);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Player controller (ALastController) wasn't found"));
+		}
+	
 		UDA_Database* Database = AfterGameMode->GetDatabase();
 		UnitData = Database->GetUnitData(Id);
 
@@ -54,9 +80,4 @@ void AUnit::BeginPlay()
 
 		SpriteComponent->SetSprite(UnitData.Sprite);
 	}
-}
-
-void AUnit::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
