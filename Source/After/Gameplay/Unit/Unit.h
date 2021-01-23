@@ -42,6 +42,18 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	const FUnitInfo& GetUnitData() const;
 
+			/* ATTACK */
+
+	UFUNCTION()
+	void BeginOverlap(UPrimitiveComponent* Component1, AActor* Actor,
+		UPrimitiveComponent* Component2, int32 Int, bool Bool, const FHitResult& HitResult);
+
+	UFUNCTION()
+	void EndOverlap(UPrimitiveComponent* Component1, AActor* Actor, UPrimitiveComponent* Component2, int32 Int);
+
+	UFUNCTION()
+	void DamageForEntities();
+
 			/* COMPONENTS */
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -50,5 +62,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UBoxComponent* CollisionComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UBoxComponent* DamageBoxComponent;
+
 private:
+			/* TIMERS */
+
+	TMap<class AEntity*, FTimerHandle> DamageTimers;
+
 };

@@ -31,13 +31,6 @@ void ALast::Tick(float DeltaTime)
 
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Yellow, FString::Printf(TEXT("Energy: %f"), Energy));
 	GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, FString::Printf(TEXT("Health: %f"), Health));
-
-	TArray<AActor*> Overlapping;
-	CollisionComponent->GetOverlappingActors(Overlapping);
-	for (AActor* i : Overlapping)
-	{
-		UE_LOG(LogTemp, Log, TEXT("%s"), *i->GetName());
-	}
 }
 
 void ALast::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

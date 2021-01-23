@@ -131,7 +131,7 @@ void AEntity::MoveY(float Val)
 	MovementY = FMath::Clamp(Val, -1.f, 1.f);
 }
 
-void AEntity::Damage(float Value, FDamageType DamageType, AEntity* FromWho)
+void AEntity::Damage(float Value, FDamageType DamageType, AActor* FromWho)
 {
 	Damage(Value, DamageType);
 	if (Health <= 0.f)
@@ -140,7 +140,7 @@ void AEntity::Damage(float Value, FDamageType DamageType, AEntity* FromWho)
 	}
 }
 
-void AEntity::Death(AEntity* Murderer)
+void AEntity::Death(AActor* Murderer)
 {
 	Death();
 }

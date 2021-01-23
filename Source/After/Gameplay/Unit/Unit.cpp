@@ -9,6 +9,7 @@
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
 
+#include "../Entity/Entity.h"
 #include "../../AfterGameModeBase.h"
 #include "../Entity/Last/LastController.h"
 
@@ -20,6 +21,11 @@ AUnit::AUnit()
 	SetRootComponent(CollisionComponent);
 	CollisionComponent->SetBoxExtent(FVector(32.f, 32.f, 8.f));
 	CollisionComponent->SetCollisionProfileName(FName("Unit"));
+
+	DamageBoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Damage Box"));
+	DamageBoxComponent->SetupAttachment(GetRootComponent());
+	DamageBoxComponent->SetBoxExtent(FVector(34.f, 34.f, 24.f));
+	DamageBoxComponent->SetCollisionProfileName(FName("UnitDamage"));
 
 	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Flipbook"));
 	SpriteComponent->SetupAttachment(GetRootComponent());
@@ -77,6 +83,17 @@ void AUnit::BeginPlay()
 		UnitData = &Database->GetUnitData(Id);
 
 		CollisionComponent->SetBoxExtent(FVector(UnitData->SizeX * 32.f, UnitData->SizeY * 32.f, 8.f));
+		
+		if (UnitData->Damage != 0.f)
+		{
+			DamageBoxComponent->SetBoxExtent(FVector(UnitData->SizeX * 32.f + 2.f, UnitData->SizeY * 32.f + 2.f, 24.f));
+			DamageBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AUnit::BeginOverlap);
+			DamageBoxComponent->OnComponentEndOverlap.AddDynamic(this, &AUnit::EndOverlap);
+		}
+		else
+		{
+			DamageBoxComponent->DestroyComponent();
+		}
 
 		SpriteComponent->SetSprite(UnitData->Sprite);
 	}
@@ -85,4 +102,35 @@ void AUnit::BeginPlay()
 const FUnitInfo& AUnit::GetUnitData() const
 {
 	return *UnitData;
+}
+
+void AUnit::BeginOverlap(UPrimitiveComponent* Component1, AActor* Actor,
+	UPrimitiveComponent* Component2, int32 Int, bool Bool, const FHitResult& HitResult)
+{
+	AEntity* Entity = Cast<AEntity>(Actor);
+	if (Entity && !DamageTimers.Contains(Entity))
+	{
+		DamageTimers.Add(Entity, FTimerHandle());
+		GetWorld()->GetTimerManager().SetTimer(DamageTimers[Entity], this, &AUnit::DamageForEntities, 1.f, true, 0.f);
+	}
+}
+
+void AUnit::EndOverlap(UPrimitiveComponent* Component1, AActor* Actor, UPrimitiveComponent* Component2, int32 Int)
+{
+	AEntity* Entity = Cast<AEntity>(Actor);
+	if (Entity && DamageTimers.Contains(Entity))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(DamageTimers[Entity]);
+		DamageTimers.Remove(Entity);
+	}
+}
+
+void AUnit::DamageForEntities()
+{
+	TArray<AEntity*> Entities;
+	DamageTimers.GetKeys(Entities);
+	for (AEntity* i : Entities)
+	{
+		i->Damage(UnitData->Damage, UnitData->DamageType, this);
+	}
 }

@@ -36,16 +36,10 @@ public:
 			/* STATS */
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-	void Damage(float Value, FDamageType DamageType, AEntity* FromWho);
-
-	//	UFUNCTION(BlueprintCallable, Category = "Stats")
-	//	void Damage(float Value, FDamageType DamageType, class AObject* FromWho);
+	void Damage(float Value, FDamageType DamageType, AActor* FromWho);
 
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-	void Death(AEntity* Murderer);
-
-	//	UFUNCTION(BlueprintCallable, Category = "Stats")
-	//	void Death(class AObject* Murderer);
+	void Death(AActor* Murderer);
 
 			/* APPEARANCE */
 
