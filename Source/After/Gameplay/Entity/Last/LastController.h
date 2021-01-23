@@ -23,6 +23,9 @@ public:
 	UFUNCTION()
 	void Select(AActor* Actor);
 
+	UFUNCTION()
+	void Unselect(AActor* Actor);
+
 protected:
 	virtual void BeginPlay() override;
 

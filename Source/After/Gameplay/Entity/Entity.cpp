@@ -50,11 +50,17 @@ void AEntity::Tick(float DeltaTime)
 				StopRunning();
 			}
 			Offset *= (bIsRunning ? EntityData->RunSpeed : EntityData->WalkSpeed) * DeltaTime;
-			if (MovementX != 0 && MovementY != 0)
+			if (MovementX != 0.f && MovementY != 0.f)
 			{
 				Offset /= Sqrt_2;
 			}
-			AddActorLocalOffset(Offset, true);
+			FHitResult HitResult;
+			AddActorLocalOffset(Offset, true, &HitResult);
+			if (HitResult.bBlockingHit)
+			{
+				Offset = Offset.ProjectOnTo(FVector(-HitResult.Normal.Y, HitResult.Normal.X, 0.f));
+				AddActorLocalOffset(Offset, true);
+			}
 
 			FDirection RequiredDirection;
 			if (MovementY < 0)
@@ -83,7 +89,6 @@ void AEntity::Tick(float DeltaTime)
 			if (!bIsTextureBlocked && CurrentStatus != RequiredStatus)
 			{
 				FlipbookComponent->SetFlipbook(EntityData->Flipbooks[RequiredStatus].Flipbooks[CurrentDirection]);
-				FlipbookComponent->SetLooping(true);
 				CurrentStatus = RequiredStatus;
 			}
 			if (bIsRunning)
@@ -96,7 +101,6 @@ void AEntity::Tick(float DeltaTime)
 			if (!bIsTextureBlocked && CurrentStatus != FEntityStatus::Stay)
 			{
 				FlipbookComponent->SetFlipbook(EntityData->Flipbooks[FEntityStatus::Stay].Flipbooks[CurrentDirection]);
-				FlipbookComponent->SetLooping(true);
 				CurrentStatus = FEntityStatus::Stay;
 			}
 		}
@@ -183,6 +187,7 @@ void AEntity::BeginPlay()
 		if (LastController)
 		{
 			OnBeginCursorOver.AddDynamic(LastController, &ALastController::Select);
+			OnEndCursorOver.AddDynamic(LastController, &ALastController::Unselect);
 		}
 		else
 		{
@@ -235,8 +240,8 @@ void AEntity::Damage(float Value, FDamageType DamageType)
 {
 	Health -= Value * EntityData->DamageResist[DamageType];
 	CurrentStatus = FEntityStatus::Damage;
+	bIsTextureBlocked = true;
 	FlipbookComponent->SetFlipbook(EntityData->Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
-	FlipbookComponent->SetLooping(false);
 	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, FlipbookComponent->GetFlipbookLength(), false);
 }
 
@@ -244,6 +249,7 @@ void AEntity::Death()
 {
 	Health = 0.f;
 	CurrentStatus = FEntityStatus::Death;
+	bIsTextureBlocked = true;
 	FlipbookComponent->SetFlipbook(EntityData->Flipbooks[CurrentStatus].Flipbooks[CurrentDirection]);
 	FlipbookComponent->SetLooping(false);
 	GetWorld()->GetTimerManager().SetTimer(TextureTimer, this, &AEntity::UnblockTexture, 4 * FlipbookComponent->GetFlipbookLength(), false);

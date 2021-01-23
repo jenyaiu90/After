@@ -73,6 +73,7 @@ void AUnit::BeginPlay()
 		if (LastController)
 		{
 			OnBeginCursorOver.AddDynamic(LastController, &ALastController::Select);
+			OnEndCursorOver.AddDynamic(LastController, &ALastController::Unselect);
 		}
 		else
 		{
@@ -93,6 +94,7 @@ void AUnit::BeginPlay()
 		else
 		{
 			DamageBoxComponent->DestroyComponent();
+			DamageBoxComponent = nullptr;
 		}
 
 		SpriteComponent->SetSprite(UnitData->Sprite);

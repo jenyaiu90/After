@@ -45,21 +45,30 @@ void ALastController::Select(AActor* Actor)
 		}
 	}
 
-	if (bNew)
+	if (bNew && Old)
 	{
-		AEntity* OldEntity = Cast<AEntity>(Old);
-		if (OldEntity)
+		Unselect(Old);
+	}
+}
+
+void ALastController::Unselect(AActor* Actor)
+{
+	AEntity* Entity = Cast<AEntity>(Actor);
+	if (Entity)
+	{
+		Entity->Unselect();
+	}
+	else
+	{
+		AUnit* Unit = Cast<AUnit>(Actor);
+		if (Unit)
 		{
-			OldEntity->Unselect();
+			Unit->Unselect();
 		}
-		else
-		{
-			AUnit* OldUnit = Cast<AUnit>(Old);
-			if (OldUnit)
-			{
-				OldUnit->Unselect();
-			}
-		}
+	}
+	if (Selected == Actor)
+	{
+		Selected = nullptr;
 	}
 }
 
